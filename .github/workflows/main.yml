@@ -1,0 +1,35 @@
+name: Update Rates
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # هر ۱۰ دقیقه اجرا می‌شود
+  workflow_dispatch:         # امکان اجرای دستی
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install telethon
+
+    - name: Run update script
+      run: |
+        python update_rates.py
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "you@example.com"
+        git config --local user.name "Your Name"
+        git add rates.json
+        git commit -m "Update rates automatically"
+        git push
