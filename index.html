@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NERKHYAB TEST - Theme Pro</title>
+    <title>NERKHYAB KHORASAN</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
@@ -121,11 +121,13 @@
 
     <script>
         let currentLang = 'fa';
+        // این نام‌ها باید دقیقاً با نام‌های داخل فایل last_rates.json یکی باشند
         const config = [
-            { key: "تومان بانکی", name: "تومان بانکی", en: "Toman Bank", sub: "تومان ایران", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
-            { key: "دلار هرات", name: "دلار", en: "Dollar", sub: "دلار هرات", icon: "https://flagcdn.com/w160/us.png" },
-            { key: "تومان چک", name: "تومان چک", en: "Toman Check", sub: "تومان هرات", icon: "https://flagcdn.com/w160/ir.png" },
-            { key: "کلدار", name: "کلدار", en: "PKR", sub: "کلدار پاکستان", icon: "https://flagcdn.com/w160/pk.png" }
+            { key: "دلار هرات", name: "دلار هرات", en: "USD Herat", sub: "نقدی", icon: "https://flagcdn.com/w160/us.png" },
+            { key: "یورو هرات", name: "یورو هرات", en: "Euro Herat", sub: "نقدی", icon: "https://flagcdn.com/w160/eu.png" },
+            { key: "تومان چک", name: "تومان چک", en: "Toman Check", sub: "هرات", icon: "https://flagcdn.com/w160/ir.png" },
+            { key: "تومان بانکی", name: "تومان بانکی", en: "Toman Bank", sub: "ایران", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
+            { key: "کلدار", name: "کلدار", en: "PKR", sub: "پاکستان", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
         function setTheme(mode) {
@@ -152,45 +154,43 @@
         }
 
         async function load() {
-            // دیتای فرضی برای تست ظاهر - Demo Data
-            const data = {
-                rates: {
-                    "تومان بانکی": { current: "61,200", status: "up", percent: "1.2%" },
-                    "دلار هرات": { current: "59,800", status: "down", percent: "0.5%" },
-                    "تومان چک": { current: "60,500", status: "same", percent: "0.0%" },
-                    "کلدار": { current: "215", status: "up", percent: "2.1%" }
-                }
-            };
+            try {
+                // آدرس فایل JSON شما
+                const res = await fetch('last_rates.json?v=' + Date.now());
+                const data = await res.json();
+                
+                const cont = document.getElementById('main-container');
+                cont.innerHTML = '';
 
-            const cont = document.getElementById('main-container');
-            cont.innerHTML = '';
+                config.forEach(item => {
+                    const rateObj = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
+                    const val = rateObj.current;
+                    const status = rateObj.status;
+                    const percent = rateObj.percent;
+                    const isUp = status === "up";
+                    const isDown = status === "down";
+                    const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
+                    const arrow = isUp ? '▲' : (isDown ? '▼' : '▬');
 
-            config.forEach(item => {
-                const rateObj = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
-                const val = rateObj.current;
-                const status = rateObj.status;
-                const percent = rateObj.percent;
-                const isUp = status === "up";
-                const isDown = status === "down";
-                const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
-                const arrow = isUp ? '▲' : (isDown ? '▼' : '▬');
-
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div class="circle-icon"><img src="${item.icon}"></div>
-                        <div style="text-align:left">
-                            <b>${currentLang === 'fa' ? item.name : item.en}</b><br>
-                            <small>${item.sub}</small>
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div class="circle-icon"><img src="${item.icon}"></div>
+                            <div style="text-align:left">
+                                <b>${currentLang === 'fa' ? item.name : item.en}</b><br>
+                                <small>${item.sub}</small>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="change-tag" style="color:${color}">${arrow} ${percent}</div>
-                        <div class="price-val">${val}</div>
-                    </div>`;
-                cont.appendChild(card);
-            });
+                        <div>
+                            <div class="change-tag" style="color:${color}">${arrow} ${percent}</div>
+                            <div class="price-val">${val}</div>
+                        </div>`;
+                    cont.appendChild(card);
+                });
+            } catch (e) { 
+                console.error("Error loading rates:", e); 
+            }
         }
 
         function upDT() {
@@ -201,4 +201,4 @@
         load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
     </script>
 </body>
-    </html>
+            </html>
