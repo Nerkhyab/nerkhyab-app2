@@ -152,76 +152,45 @@
         }
 
         async function load() {
-            try {
-                // دیتای فرضی برای تست ظاهر - Demo Data
-                const data = {
-                    rates: {
-                        "تومان بانکی": { current: "61,200", status: "up", percent: "1.2%" },
-                        "دلار هرات": { current: "59,800", status: "down", percent: "0.5%" },
-                        "تومان چک": { current: "60,500", status: "same", percent: "0.0%" },
-                        "کلدار": { current: "215", status: "up", percent: "2.1%" }
-                    }
-                };
-
-                const cont = document.getElementById('main-container');
-                cont.innerHTML = '';
-
-                config.forEach(item => {
-                    const rateObj = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
-                    const val = rateObj.current;
-                    const status = rateObj.status;
-                    const percent = rateObj.percent;
-                    const isUp = status === "up";
-                    const isDown = status === "down";
-                    const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
-                    const arrow = isUp ? '▲' : (isDown ? '▼' : '▬');
-
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <div class="circle-icon"><img src="${item.icon}"></div>
-                            <div style="text-align:left">
-                                <b>${currentLang === 'fa' ? item.name : item.en}</b><br>
-                                <small>${item.sub}</small>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="change-tag" style="color:${color}">${arrow} ${percent}</div>
-                            <div class="price-val">${val}</div>
-                        </div>`;
-                    cont.appendChild(card);
-                });
-            } catch (e) { console.error(e); }
+            // دیتای فرضی برای تست ظاهر - Demo Data
+            const data = {
+                rates: {
+                    "تومان بانکی": { current: "61,200", status: "up", percent: "1.2%" },
+                    "دلار هرات": { current: "59,800", status: "down", percent: "0.5%" },
+                    "تومان چک": { current: "60,500", status: "same", percent: "0.0%" },
+                    "کلدار": { current: "215", status: "up", percent: "2.1%" }
                 }
+            };
 
-                config.forEach(item => {
-                    const rateObj = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
-                    const val = rateObj.current;
-                    const status = rateObj.status;
-                    const percent = rateObj.percent;
-                    const isUp = status === "up";
-                    const isDown = status === "down";
-                    const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
-                    const arrow = isUp ? '▲' : (isDown ? '▼' : '▬');
+            const cont = document.getElementById('main-container');
+            cont.innerHTML = '';
 
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <div class="circle-icon"><img src="${item.icon}"></div>
-                            <div style="text-align:left">
-                                <b>${currentLang === 'fa' ? item.name : item.en}</b><br>
-                                <small>${item.sub}</small>
-                            </div>
+            config.forEach(item => {
+                const rateObj = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
+                const val = rateObj.current;
+                const status = rateObj.status;
+                const percent = rateObj.percent;
+                const isUp = status === "up";
+                const isDown = status === "down";
+                const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
+                const arrow = isUp ? '▲' : (isDown ? '▼' : '▬');
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div class="circle-icon"><img src="${item.icon}"></div>
+                        <div style="text-align:left">
+                            <b>${currentLang === 'fa' ? item.name : item.en}</b><br>
+                            <small>${item.sub}</small>
                         </div>
-                        <div>
-                            <div class="change-tag" style="color:${color}">${arrow} ${percent}</div>
-                            <div class="price-val">${val}</div>
-                        </div>`;
-                    cont.appendChild(card);
-                });
-            } catch (e) { console.error(e); }
+                    </div>
+                    <div>
+                        <div class="change-tag" style="color:${color}">${arrow} ${percent}</div>
+                        <div class="price-val">${val}</div>
+                    </div>`;
+                cont.appendChild(card);
+            });
         }
 
         function upDT() {
