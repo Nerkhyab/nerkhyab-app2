@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NERKHYAB KHORASAN</title>
+    <title>NERKHYAB - TEST MODE</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
@@ -63,7 +63,6 @@
             border: 1px solid var(--border); 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .card:active { transform: scale(0.97); }
 
         .circle-icon { 
             width: 38px; height: 38px; border-radius: 50%; overflow: hidden; 
@@ -78,14 +77,6 @@
         .change-tag { font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 3px; }
 
         .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; border: 1px solid var(--border); }
-        
-        .full-modal { position: fixed; inset: 0; background: var(--modal); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
-        .full-modal.active { display: flex; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .toggle-box { background: rgba(150,150,150,0.1); border-radius: 12px; display: flex; padding: 3px; margin: 10px 0 20px 0; }
-        .toggle-btn { flex: 1; border: none; background: none; color: var(--text); padding: 9px; border-radius: 10px; font-family: 'Vazirmatn'; cursor: pointer; font-size: 0.85rem; }
-        .toggle-btn.active { background: rgba(150,150,150,0.2); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body class="dark-mode">
@@ -98,99 +89,50 @@
     <div id="main-container" class="container grid-view"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.2rem; opacity: 0.6; cursor:pointer;"></i>
-        <span id="update-text" style="font-size: 0.8rem; font-weight: 400; opacity: 0.6;">LIVE UPDATES</span>
-        <i class="fas fa-th-large" id="viewToggle" onclick="toggleView()" style="font-size: 1.2rem; opacity: 0.6; cursor:pointer;"></i>
-    </div>
-
-    <div id="sMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px;"><b style="font-size:1.4rem; font-weight:500;">تنظیمات</b><i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.4rem; cursor:pointer;"></i></div>
-        
-        <label style="color:var(--sub); font-size:0.8rem;">حالت ظاهری / Theme</label>
-        <div class="toggle-box">
-            <button id="darkBtn" class="toggle-btn active" onclick="setTheme('dark')">تیره</button>
-            <button id="lightBtn" class="toggle-btn" onclick="setTheme('light')">روشن</button>
-        </div>
-
-        <label style="color:var(--sub); font-size:0.8rem;">زبان / Language</label>
-        <div class="toggle-box">
-            <button id="faBtn" class="toggle-btn active" onclick="setLang('fa')">فارسی</button>
-            <button id="enBtn" class="toggle-btn" onclick="setLang('en')">English</button>
-        </div>
+        <i class="fas fa-cog" style="font-size: 1.2rem; opacity: 0.6;"></i>
+        <span id="update-text" style="font-size: 0.8rem; font-weight: 400; opacity: 0.6;">TEST MODE ACTIVE</span>
+        <i class="fas fa-th-large" onclick="toggleView()" style="font-size: 1.2rem; opacity: 0.6; cursor:pointer;"></i>
     </div>
 
     <script>
-        let currentLang = 'fa';
-        // این نام‌ها باید دقیقاً با نام‌های داخل فایل last_rates.json یکی باشند
-        const config = [
-            { key: "دلار هرات", name: "دلار هرات", en: "USD Herat", sub: "نقدی", icon: "https://flagcdn.com/w160/us.png" },
-            { key: "یورو هرات", name: "یورو هرات", en: "Euro Herat", sub: "نقدی", icon: "https://flagcdn.com/w160/eu.png" },
-            { key: "تومان چک", name: "تومان چک", en: "Toman Check", sub: "هرات", icon: "https://flagcdn.com/w160/ir.png" },
-            { key: "تومان بانکی", name: "تومان بانکی", en: "Toman Bank", sub: "ایران", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
-            { key: "کلدار", name: "کلدار", en: "PKR", sub: "پاکستان", icon: "https://flagcdn.com/w160/pk.png" }
+        // دیتای کاملاً فرضی برای تست ظاهر
+        const demoData = [
+            { name: "دلار هرات", sub: "نقدی", price: "59,200", percent: "1.2%", status: "up", icon: "https://flagcdn.com/w160/us.png" },
+            { name: "یورو هرات", sub: "نقدی", price: "64,150", percent: "0.5%", status: "down", icon: "https://flagcdn.com/w160/eu.png" },
+            { name: "تومان چک", sub: "هرات", price: "60,300", percent: "0.0%", status: "same", icon: "https://flagcdn.com/w160/ir.png" },
+            { name: "کلدار", sub: "پاکستان", price: "212", percent: "2.4%", status: "up", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
-        function setTheme(mode) {
-            document.body.className = mode === 'light' ? 'light-mode' : 'dark-mode';
-            document.getElementById('darkBtn').classList.toggle('active', mode === 'dark');
-            document.getElementById('lightBtn').classList.toggle('active', mode === 'light');
-        }
-
-        function setLang(lang) {
-            currentLang = lang;
-            document.getElementById('faBtn').classList.toggle('active', lang === 'fa');
-            document.getElementById('enBtn').classList.toggle('active', lang === 'en');
-            load();
-        }
-
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-        
         function toggleView() {
             const container = document.getElementById('main-container');
             container.classList.toggle('grid-view');
             container.classList.toggle('list-view');
-            document.getElementById('viewToggle').className = container.classList.contains('grid-view') ? 'fas fa-th-large' : 'fas fa-list';
         }
 
-        async function load() {
-            try {
-                // آدرس فایل JSON شما
-                const res = await fetch('last_rates.json?v=' + Date.now());
-                const data = await res.json();
-                
-                const cont = document.getElementById('main-container');
-                cont.innerHTML = '';
+        function loadDemo() {
+            const cont = document.getElementById('main-container');
+            cont.innerHTML = '';
 
-                config.forEach(item => {
-                    const rateObj = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
-                    const val = rateObj.current;
-                    const status = rateObj.status;
-                    const percent = rateObj.percent;
-                    const isUp = status === "up";
-                    const isDown = status === "down";
-                    const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
-                    const arrow = isUp ? '▲' : (isDown ? '▼' : '▬');
+            demoData.forEach(item => {
+                const color = item.status === "up" ? 'var(--accent)' : (item.status === "down" ? 'var(--down)' : 'var(--sub)');
+                const arrow = item.status === "up" ? '▲' : (item.status === "down" ? '▼' : '▬');
 
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <div class="circle-icon"><img src="${item.icon}"></div>
-                            <div style="text-align:left">
-                                <b>${currentLang === 'fa' ? item.name : item.en}</b><br>
-                                <small>${item.sub}</small>
-                            </div>
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div class="circle-icon"><img src="${item.icon}"></div>
+                        <div style="text-align:left">
+                            <b>${item.name}</b><br>
+                            <small>${item.sub}</small>
                         </div>
-                        <div>
-                            <div class="change-tag" style="color:${color}">${arrow} ${percent}</div>
-                            <div class="price-val">${val}</div>
-                        </div>`;
-                    cont.appendChild(card);
-                });
-            } catch (e) { 
-                console.error("Error loading rates:", e); 
-            }
+                    </div>
+                    <div>
+                        <div class="change-tag" style="color:${color}">${arrow} ${item.percent}</div>
+                        <div class="price-val">${item.price}</div>
+                    </div>`;
+                cont.appendChild(card);
+            });
         }
 
         function upDT() {
@@ -198,7 +140,7 @@
             document.getElementById('dt').innerHTML = `${j.jy}/${String(j.jm).padStart(2,'0')}/${String(j.jd).padStart(2,'0')}<br>${n.toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'})}`;
         }
 
-        load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
+        loadDemo(); setInterval(upDT, 1000); upDT();
     </script>
 </body>
-            </html>
+    </html>
