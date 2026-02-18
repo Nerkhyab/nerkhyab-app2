@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NERKHYAB KHORASAN - Theme Pro</title>
+    <title>NERKHYAB TEST - Theme Pro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
@@ -19,7 +19,6 @@
             --border: rgba(255,255,255,0.08);
         }
 
-        /* استایل اختصاصی برای حالت روشن */
         .light-mode { 
             --bg: #f2f2f7; 
             --card: rgba(255, 255, 255, 0.7); 
@@ -123,10 +122,9 @@
     <script>
         let currentLang = 'fa';
         const config = [
-            { key: "دالر هرات", name: "دالر", en: "Dollar", sub: "دالر هرات", icon: "https://flagcdn.com/w160/us.png" },
-            { key: "یورو هرات", name: "یورو", en: "Euro", sub: "یورو هرات", icon: "https://flagcdn.com/w160/eu.png" },
-            { key: "تومان چک", name: "تومان چک", en: "Toman Check", sub: "تومان هرات", icon: "https://flagcdn.com/w160/ir.png" },
             { key: "تومان بانکی", name: "تومان بانکی", en: "Toman Bank", sub: "تومان ایران", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
+            { key: "دلار هرات", name: "دلار", en: "Dollar", sub: "دلار هرات", icon: "https://flagcdn.com/w160/us.png" },
+            { key: "تومان چک", name: "تومان چک", en: "Toman Check", sub: "تومان هرات", icon: "https://flagcdn.com/w160/ir.png" },
             { key: "کلدار", name: "کلدار", en: "PKR", sub: "کلدار پاکستان", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
@@ -155,7 +153,8 @@
 
         async function load() {
             try {
-                const res = await fetch('last_rates.json?v=' + Date.now());
+                // آدرس فایل JSON پروژه اصلی شما برای تست واقعی
+                const res = await fetch('https://nerkhyab.github.io/nerkhyab-app2/last_rates.json?v=' + Date.now());
                 const data = await res.json();
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
@@ -197,4 +196,4 @@
         load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
     </script>
 </body>
-            </html>
+    </html>
