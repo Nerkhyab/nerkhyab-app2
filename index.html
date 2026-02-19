@@ -3,96 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تست منوی جدید</title>
+    <title>نسخه آزمایشی نرخ‌یاب</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --accent: #ffd700; }
-        body { background: #0c0c0c; font-family: Tahoma, Arial; margin: 0; padding: 20px; color: white; overflow: hidden; }
+        :root { --accent: #ffd700; --bg: #0c0c0c; }
+        body { background: var(--bg); font-family: Tahoma, sans-serif; margin: 0; padding: 20px; color: white; transition: 0.3s; }
 
-        /* استایل نمایش نرخ‌ها در پس‌زمینه */
-        .rates-grid { 
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; opacity: 0.4; 
-        }
-        .rate-card {
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.1);
+        /* استایل بدنه اصلی برنامه (نرخ‌ها) */
+        .container { max-width: 500px; margin: auto; }
+        .header-main { text-align: center; padding: 20px 0; font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+        
+        #rates-list { 
+            display: grid; gap: 12px; transition: all 0.4s ease; 
         }
 
-        /* منوی شیشه‌ای اصلی */
-        .glass-menu { 
+        /* حالت کارتی (دو ستونه) */
+        .grid-view { grid-template-columns: 1fr 1fr; }
+        /* حالت لیستی (تک ستونه) */
+        .list-view { grid-template-columns: 1fr; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px; border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card b { color: var(--accent); font-size: 1.1rem; }
+
+        /* --- منوی شیشه‌ای حرفه‌ای --- */
+        .full-modal { 
             position: fixed; inset: 0; 
             background: rgba(0, 0, 0, 0.7); 
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            display: flex; flex-direction: column; padding: 40px 25px; z-index: 2000;
+            display: none; z-index: 2000; padding: 40px 25px; 
+            flex-direction: column; box-sizing: border-box;
+        }
+        .full-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .menu-section { margin-bottom: 25px; }
+        .menu-label { font-size: 0.8rem; opacity: 0.5; margin-bottom: 12px; display: block; }
+
+        .setting-box { 
+            background: rgba(255, 255, 255, 0.08); 
+            padding: 5px; border-radius: 20px; 
+            display: flex; gap: 5px;
+        }
+        .setting-box button { 
+            flex: 1; border: none; background: none; color: #fff; 
+            padding: 14px; border-radius: 16px; font-family: Tahoma; 
+            font-weight: 500; transition: 0.3s; cursor: pointer;
+        }
+        .setting-box button.active { 
+            background: rgba(255, 255, 255, 0.15); 
+            font-weight: 800; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .section { margin-bottom: 25px; }
-        .label { font-size: 0.8rem; opacity: 0.5; margin-bottom: 12px; display: block; }
-
-        .capsule-box { 
-            background: rgba(255, 255, 255, 0.08); padding: 5px; border-radius: 20px; display: flex; gap: 5px;
-        }
-        .capsule-box button { 
-            flex: 1; border: none; background: none; color: #fff; padding: 12px; 
-            border-radius: 15px; cursor: pointer; transition: 0.3s;
-        }
-        .capsule-box button.active { background: rgba(255, 255, 255, 0.15); font-weight: bold; }
-
-        .list-item {
-            display: flex; justify-content: space-between; padding: 18px 5px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        .menu-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 5px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #fff; font-size: 1rem;
         }
 
-        .save-btn {
-            margin-top: auto; padding: 18px; background: #fff; border: none; 
-            border-radius: 20px; color: #000; font-weight: 900; cursor: pointer;
+        .btn-close {
+            margin-top: auto; padding: 20px; background: #fff; border: none; 
+            border-radius: 22px; color: #000; font-weight: 900; font-size: 1.1rem; cursor: pointer;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* دکمه شناور تنظیمات برای تست */
+        .fab-settings {
+            position: fixed; bottom: 30px; right: 30px; 
+            background: var(--accent); width: 60px; height: 60px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #000; font-size: 1.5rem; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-    <div class="rates-grid">
-        <div class="rate-card">دلار<br><b>۶۵,۲۰۰</b></div>
-        <div class="rate-card">یورو<br><b>۷۱,۴۰۰</b></div>
-        <div class="rate-card">درهم<br><b>۱۷,۸۰۰</b></div>
-        <div class="rate-card">پوند<br><b>۸۳,۱۰۰</b></div>
+    <div class="container">
+        <div class="header-main">نرخ‌یاب خراسان</div>
+        
+        <div id="rates-list" class="grid-view">
+            <div class="card"><span>دلار آمریکا</span> <b>۶۵,۲۰۰</b></div>
+            <div class="card"><span>یورو</span> <b>۷۱,۴۰۰</b></div>
+            <div class="card"><span>درهم امارات</span> <b>۱۷,۸۵۰</b></div>
+            <div class="card"><span>پوند انگلیس</span> <b>۸۳,۱۰۰</b></div>
+            <div class="card"><span>لیر ترکیه</span> <b>۲,۱۴۰</b></div>
+            <div class="card"><span>تتر</span> <b>۶۵,۳۵۰</b></div>
+        </div>
     </div>
 
-    <div class="glass-menu">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px;">
-            <b style="font-size:1.3rem;">تنظیمات</b>
-            <i class="fas fa-times" style="opacity:0.5;"></i>
-        </div>
-
-        <div class="section">
-            <span class="label">چیدمان نمایش</span>
-            <div class="capsule-box">
-                <button class="active"><i class="fas fa-th-large"></i> کارتی</button>
-                <button><i class="fas fa-list"></i> لیستی</button>
-            </div>
-        </div>
-
-        <div class="section">
-            <span class="label">تم برنامه</span>
-            <div class="capsule-box">
-                <button class="active">تیره</button>
-                <button>روشن</button>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="list-item">
-                <span>توسعه‌دهنده</span>
-                <span style="opacity:0.6;">صافی بهادری</span>
-            </div>
-            <div class="list-item" style="border:none;">
-                <span>نسخه</span>
-                <span style="opacity:0.6;">2.0.0</span>
-            </div>
-        </div>
-
-        <button class="save-btn" onclick="alert('این یک نسخه تستی است')">تأیید و بازگشت</button>
+    <div class="fab-settings" onclick="openMenu()">
+        <i class="fas fa-cog"></i>
     </div>
 
+    <div id="sMod" class="full-modal">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <b style="font-size:1.3rem;">تنظیمات برنامه</b>
+            <i class="fas fa-times" onclick="closeMenu()" style="font-size:1.5rem; opacity:0.5; cursor:pointer;"></i>
+        </div>
+
+        <div class="menu-section">
+            <span class="menu-label">چیدمان نمایش نرخ‌ها</span>
+            <div class="setting-box">
+                <button id="btnGrid" class="active" onclick="changeView('grid')">
+                    <i class="fas fa-th-large"></i> کارتی
+                </button>
+                <button id="btnList" onclick="changeView('list')">
+                    <i class="fas fa-list"></i> لیستی
+                </button>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <span class="menu-label">تم ظاهری</span>
+            <div class="setting-box">
+                <button class="active">حالت تیره</button>
+                <button onclick="alert('حالت روشن در این نسخه تستی غیرفعال است')">حالت روشن</button>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-item" onclick="alert('توسعه دهنده: صافی بهادری')">
+                <span>درباره ما</span>
+                <i class="fas fa-chevron-left" style="opacity:0.3; font-size:0.8rem;"></i>
+            </div>
+            <div class="menu-item">
+                <span>نسخه اپلیکیشن</span>
+                <span style="opacity:0.5;">2.0.0</span>
+            </div>
+        </div>
+
+        <button class="btn-close" onclick="closeMenu()">تأیید و بازگشت</button>
+    </div>
+
+    <script>
+        function openMenu() { document.getElementById('sMod').classList.add('active'); }
+        function closeMenu() { document.getElementById('sMod').classList.remove('active'); }
+
+        function changeView(type) {
+            const list = document.getElementById('rates-list');
+            const gBtn = document.getElementById('btnGrid');
+            const lBtn = document.getElementById('btnList');
+
+            if(type === 'grid') {
+                list.className = 'grid-view';
+                gBtn.classList.add('active');
+                lBtn.classList.remove('active');
+            } else {
+                list.className = 'list-view';
+                lBtn.classList.add('active');
+                gBtn.classList.remove('active');
+            }
+        }
+    </script>
 </body>
-    </html>
+        </html>
