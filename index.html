@@ -41,20 +41,20 @@
             font-family:'Vazirmatn', sans-serif; overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
-
-        .header { 
-            padding: 16px 16px 8px; /* افزایش پدینگ بالا برای فاصله گرفتن اصولی از سقف مرورگر */
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-start; /*  چپ ثابت ماندن نام برند در سمت
-            background: var(--bg);
-            position: sticky; 
-            top: 0; 
-            z-index: 1001;
-            border-bottom: none; 
-            gap: 4px; /* تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و بخش زمان */
-            direction: ltr; 
-        }background: var(--bg);
+.header { 
+    padding: 20px 16px 13px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: stretch;
+    background: var(--bg);
+    position: sticky; 
+    top: 0; 
+    z-index: 1001;
+    border-bottom: none; 
+    gap: 8px;
+    direction: ltr; 
+}
+        background: var(--bg);
         .header-left { display: flex; align-items: center; }
         .main-logo { display: none; } 
             
@@ -73,14 +73,16 @@
     text-rendering: optimizeLegibility;
     font-weight: bold !important;
 }
-        date-time { 
-            display: flex; 
-            flex-direction: row; 
-            align-items: center; 
-            align-self: right; /* معجزه این خط: باکس ساعت و تاریخ را دقیقاً به وسط صفحه هدایت می‌کند */
-            gap: 15px; 
-            white-space: nowrap; 
-        }
+        .date-time { 
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    align-self: stretch;
+    gap: 12px; 
+    white-space: nowrap; 
+    margin-top: 0;
+    justify-content: space-between;
+                      }
         .date-time b { 
     font-size: 0.75rem; 
     font-weight: 300; 
