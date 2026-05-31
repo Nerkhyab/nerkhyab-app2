@@ -99,7 +99,9 @@
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
             -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
         }
-
+.container.grid-mode .card {
+    aspect-ratio: 1 / 1; /* 1 به 1 یعنی مربع کامل */
+        }
       .grid-mode .card-main-row { flex-direction: column; text-align: center; padding: 16px 8px; gap: 8px; min-height: 130px; }
 .grid-mode .card-info { flex-direction: row-reverse; justify-content: center; gap: 8px; }
 .grid-mode .card-info img, .grid-mode .card-info div { width: 40px !important; height: 40px !important; }
