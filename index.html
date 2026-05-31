@@ -621,7 +621,48 @@ navigator.clipboard.writeText(window.location.href);
 
     syncUIWithStorage();
     }
+/* استایل جدید برای هدر */
+.header-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
 
+.brand-name {
+    font-weight: 900;
+    font-size: 1.7rem;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.header-left-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.live-rate-badge {
+    background: linear-gradient(135deg, #d4af37, #ff8c00);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    white-space: nowrap;
+}
+
+.date-time {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    align-self: auto;
+                        }
     
 </script>
 </body>
