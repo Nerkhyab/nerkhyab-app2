@@ -404,19 +404,25 @@ body.light-mode .card .text-down { color: var(--red) !important; }
         return card;
     }
 
-    async function load() {
-        try {
-            // آدرس فایل JSON خود را بررسی کنید (اگر در هاست محلی است)
-            const res = await fetch('last_rates.json?v=' + Date.now());
-            const data = await res.json();
-            const container = document.getElementById('main-container');
-            container.innerHTML = '';
-            itemsList.forEach(item => {
-                const r = data.rates[item.key] || {current: "---", status: "up", percent: "0%"};
-                container.appendChild(createCardHTML(item, r));
-            });
-        } catch (e) { console.error("Error loading rates"); }
-    }
+    // جایگزین کردن بخش fetch با داده‌های مستقیم برای تست
+async function load() {
+    // این دیتای نمونه است
+    const data = {
+        rates: {
+            "دالر هرات": {current: "85.20", status: "up", percent: "+0.45%"},
+            "یورو هرات": {current: "92.10", status: "down", percent: "-0.10%"}
+        }
+    };
+    
+    const container = document.getElementById('main-container');
+    container.innerHTML = '';
+    
+    // حالا کارت‌ها را بساز
+    itemsList.forEach(item => {
+        const r = data.rates[item.key] || {current: "---", status: "up", percent: "0%"};
+        container.appendChild(createCardHTML(item, r));
+    });
+            }
 
     // راه اندازی اولیه
     window.addEventListener('DOMContentLoaded', () => {
