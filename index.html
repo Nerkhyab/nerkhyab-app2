@@ -358,23 +358,24 @@
 
 function updateDT() {
         const now = new Date();
-        now.setHours(now.getHours() + 1); // جلو بردن ساعت به مدت ۱ ساعت
+        now.setHours(now.getHours() + 1);
         
         let hours = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const ampm = hours >= 12 ? 'PM' : 'AM';
         
         hours = hours % 12;
-        hours = hours ? hours : 12; // تبدیل ساعت 0 به 12 در فرمت 12 ساعته
+        hours = hours ? hours : 12;
         const hh = String(hours).padStart(2, '0');
         
         const j = jalaali.toJalaali(now);
+        const weekdays = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
+        const weekdayName = weekdays[now.getDay()];
         const dtEl = document.getElementById('dt');
         if(dtEl) {
-            // نمایش ساعت همراه با پسوند AM/PM و تاریخ در کنار هم با فونت ضخیم
-            dtEl.innerHTML = `<b>${hh}:${minutes} ${ampm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+            dtEl.innerHTML = `<b>${hh}:${minutes} ${ampm}</b> <span>${weekdayName} ${j.jy}/${j.jm}/${j.jd}</span>`;
         }
-            }
+                        }
     updateDT(); setInterval(updateDT, 1000);
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
