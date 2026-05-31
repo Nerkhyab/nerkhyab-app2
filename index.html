@@ -1,1 +1,430 @@
-12d
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BECHAND?!</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <style>
+        :root {
+    --bg:#343030;
+    --card:#1d1d1f;
+    --text:#fff;
+    --border:rgba(255,255,255,0.06);
+    --nav:rgba(35,35,35,0.92);
+    --green:#00c853;
+    --red:#ff5252;
+        }
+        #update-text {
+            color: #ffffff !important;
+            font-weight: 300 !important;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+        /* اصلاح اصلی برای سفید و مربع شدن کارت‌ها */
+/* اصلاح رنگ متن‌ها برای پس‌زمینه سفید در حالت روشن */
+body.light-mode .card b,
+body.light-mode .card .price-val,
+body.light-mode .card .price-box {
+    color: #000000 !important;
+}
+
+/* اطمینان از رنگ‌بندی صحیح در کارت‌های سفید */
+body.light-mode .card {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border-radius: 25px !important;
+    aspect-ratio: 1 / 1 !important;
+}
+
+/* رفع مشکل دیده نشدن عنوان ارز و نوسانات */
+body.light-mode .card .status-badge,
+body.light-mode .card .status-badge span {
+    color: #000000 !important; /* یا می‌توانید برای درصدها همان سبز و قرمز را نگه دارید */
+}
+
+/* حفظ رنگ سبز و قرمز برای درصد نوسان در حالت روشن */
+body.light-mode .card .text-up { color: var(--green) !important; }
+body.light-mode .card .text-down { color: var(--red) !important; }
+
+/* تنظیم چیدمان داخل کارت برای حالت مربعی */
+.grid-mode .card-main-row {
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px !important;
+}
+
+        body {
+            background: var(--bg);
+); color:var(--text);
+            font-family:'Vazirmatn', sans-serif; overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+.header { 
+    padding: 16px; 
+    display: flex; 
+    flex-direction: row; /* تغییر به حالت ردیفی */
+    justify-content: space-between; /* فاصله انداختن بین نام برند و تاریخ */
+    align-items: center; 
+    background: var(--bg);
+    position: sticky; 
+    top: 0; 
+    z-index: 1001;
+    direction: ltr; /* جهت را برای چیدمان بهتر روی LTR نگه دارید */
+}
+
+.header-left { 
+    display: flex; 
+    align-items: center; 
+}
+
+.brand-name { 
+    font-weight: 1000; 
+    font-size: 2.2rem; 
+    margin: 0;
+}
+
+.date-time { 
+    display: flex; 
+    flex-direction: column; /* ساعت و تاریخ زیر هم در سمت راست */
+    align-items: flex-end; /* تراز به راست */
+    gap: 0px; 
+}
+
+.date-time b, .date-time span { 
+    font-size: 1.2rem; 
+    color: var(--text); 
+    line-height: 1.2;
+}
+        تنظیم فاصله عمودی کاملاً یکسان و متناسب بین نام برند و 
+        .date-time span { 
+            font-size: 0.9rem; 
+            font-weight: 700; /* ضخیم ماندن فونت تاریخ هم‌وزن با ساعت */
+            color: var(--text); 
+        }
+
+        .container { 
+            padding: 16px 14px 50px; /* تنظیم فاصله استاندارد و تمیز شروع کارت‌ها از هدر جدید */
+            display: flex; 
+            flex-direction: column; 
+            gap: 9px; 
+                        }
+        .card {
+            
+        background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
+           box-shadow:0 8px 25px rgba(0,0,0,0.30);
+            border-radius:20px; padding:0; display:flex; flex-direction:column;
+            transition: all 0.3s ease; cursor: pointer; overflow: hidden;
+            -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+        }
+        .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; width: 100%; box-sizing: border-box; }
+
+        .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
+        .card.active-up .price-val { color: var(--green); }
+        .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
+        .card.active-down .price-val { color: var(--red); }
+
+        .price-box { display:flex; flex-direction:column; gap:4px; }
+        .status-badge { display:flex; align-items:center; gap:4px; padding:0; background:transparent !important; font-size:0.70rem; direction:ltr; }
+        
+        .text-up { color: var(--green) !important; }
+        .text-down { color: var(--red) !important; }
+
+        .price-val { font-size:1.7rem; font-weight:700; transition: color 0.3s; }
+        .card-info { display:flex; align-items:center; gap:10px; }
+        .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
+
+        .chart-wrapper {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .card.expanded .chart-wrapper { max-height: 220px; padding: 10px; border-top: 1px solid var(--border); }
+        
+        .chart-stats { display: flex; justify-content: space-between; padding: 0 10px 8px; font-size: 0.75rem; opacity: 0.8; border-bottom: 1px dashed var(--border); margin-bottom: 8px; }
+        .chart-container { width: 100%; height: 150px; position: relative; }
+
+        .drag-handle { color: var(--text); opacity: 0.2; padding: 10px 5px; cursor: grab; display: flex; align-items: center; font-size: 1.1rem; }
+        .drag-handle:active { cursor: grabbing; opacity: 0.6; }
+                .bottom-nav {
+            position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
+            width:85%; background:var(--nav); backdrop-filter:blur(20px); 
+            border-radius:30px; padding:12px 20px; display:flex;
+            justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
+                        }
+          .full-modal {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000; padding: 25px; flex-direction: column;
+        }
+        .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .switch-wrapper {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 15px;
+            margin-bottom: 12px; border: 1px solid var(--border);
+        }
+
+        .setting-btn {
+            padding: 15px; border-radius: 12px; color: var(--text); background: rgba(255, 255, 255, 0.08);
+            margin-top: 10px; cursor: pointer; text-align: center; border: 1px solid var(--border);
+            text-decoration: none; display: block;
+            font-family: 'Vazirmatn', sans-serif !important; font-size: 0.95rem;
+        }
+        .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; color: white !important; border: none !important; }
+
+        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 20px 8px; gap: 15px; }
+        .grid-mode .chart-wrapper, .grid-mode .drag-handle { display: none; }
+
+        .setting-group {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            direction: rtl !important;
+        }
+
+        .group-title {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 2px;
+            padding-right: 4px;
+        }
+
+        .segmented-control {
+            position: relative;
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 3px;
+            height: 40px;
+            align-items: center;
+            isolation: isolate;
+        }
+
+        .segment-option {
+            flex: 1;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 100%;
+            transition: color 0.25s ease;
+        }
+
+        .segment-slider {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            width: calc(50% - 3px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            border-radius: 10px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .segment-option.active {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .single-action-row {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .single-action-row:active {
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style></head><body>
+
+    <div class="header">
+    <div class="header-left">
+        <div class="brand-name">BECHAND?!</div>
+    </div>
+    <div class="date-time" id="dt"></div>
+    </div>
+
+            <div id="main-container" class="container"></div>
+
+    <div class="bottom-nav">
+        <i class="fas fa-cog" style="cursor:pointer;" onclick="openModal('sMod')"></i>
+        <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
+        <i class="fas fa-calculator" style="cursor:pointer;" onclick="openModal('calcMod')"></i>
+    </div>
+
+    <div id="sMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
+            <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
+            <i class="fas fa-times" style="font-size: 1.3rem; cursor:pointer; opacity: 0.6;" onclick="closeModal('sMod')"></i>
+        </div>
+             <div class="setting-group">
+            <div class="group-title" id="grid-label-text">حالت نمایش</div>
+            <div class="segmented-control" id="layout-control">
+                <div class="segment-slider" id="layout-slider"></div>
+                <div class="segment-option" id="opt-list" onclick="setControlLayout(false)">
+                    <i class="fas fa-bars"></i> لیست
+                </div>
+                <div class="segment-option" id="opt-grid" onclick="setControlLayout(true)">
+                    <i class="fas fa-th-large"></i> کنار هم
+                </div>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <div class="group-title">تم</div>
+            <div class="segmented-control" id="theme-control">
+                <div class="segment-slider" id="theme-slider"></div>
+                <div class="segment-option" id="opt-light" onclick="setControlTheme(true)">
+                    <i class="fas fa-sun"></i> روشن
+                </div>
+                <div class="segment-option" id="opt-dark" onclick="setControlTheme(false)">
+                    <i class="fas fa-moon"></i> تیره
+                </div>
+            </div>
+        </div>
+
+    
+
+        <div style="margin-top: 10px;"></div>
+
+        <div class="single-action-row" onclick="openAbout()">
+            <span>درباره برنامه</span>
+            <i class="fas fa-chevron-left" style="font-size: 0.8rem; opacity: 0.3;"></i>
+        </div>
+
+        <div class="single-action-row" onclick="location.reload()">
+            <span id="manual-update-btn">بروزرسانی قیمت‌ها</span>
+            <i class="fas fa-sync-alt" style="font-size: 0.85rem; opacity: 0.5;"></i>
+        </div>
+
+        <div class="single-action-row" onclick="shareApp()">
+            <span id="manual-share-btn">پیشنهاد به دوستان</span>
+            <i class="fas fa-share-nodes" style="font-size: 0.85rem; opacity: 0.5;"></i>
+        </div>
+
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="single-action-row" style="text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;">
+            <span><i class="fab fa-instagram" style="margin-left: 6px;"></i> اینستاگرام سازنده</span>
+        </a>
+    </div>
+
+    <div id="aboutMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
+            <b style="font-size: 1.2rem;">درباره برنامه</b>
+            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
+        </div>
+        <div style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
+            <b style="color: #d4af37;">منبع قیمت:</b><br>
+            ما در این برنامه هیچ اطلاعاتی از شما جمع‌آوری نمی‌کنیم، تنها عملکرد برنامه این است که پس از بازشدن قیمت ها به طور خودکار نمایش داده می‌شوند.قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
+            <b style="color: #d4af37;"> برنامه‌نویس:</b><br>
+            صفی الله بهادری غوریانی.<br><br>
+            جهت ارتباط با برنامه‌نویس پروژه یا انتقاد و پیشنهاد در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
+        </div>
+                </div>
+                                    <!-- مودال جدید برای ماشین حساب -->
+    <div id="calcMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
+            <b id="calc-title" style="font-size: 1.2rem;">ماشین حساب</b>
+            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('calcMod')"></i>
+        </div>
+        <div style="text-align: center; margin-top: 60px; opacity: 0.7;">
+            <i class="fas fa-calculator" style="font-size: 3.5rem; margin-bottom: 15px; color: #d4af37;"></i>
+            <p id="calc-welcome" style="font-size: 1.1rem; font-weight: 300;">این بخش به‌زودی فعال می‌شود!</p>
+        </div>
+                    </div><script>let currentLang = localStorage.getItem('lang') || 'fa';
+
+const itemsList = [
+    {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+    {id: "eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+    {id: "toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+    {id: "toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+    {id: "kaldar", key:"کلدار هرات", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
+    {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
+];
+
+
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function createCardHTML(item, r) {
+    const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
+    const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
+    let iconHtml = `<img src="${item.icon}" style="width:35px; height:35px; border-radius:8px; object-fit:cover;">`;
+    
+    const card = document.createElement('div');
+    card.className = `card`; 
+    card.innerHTML = `
+        <div style="padding: 15px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                ${iconHtml}
+                <div style="font-weight: 800; color: #000;">${item.key}</div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <div class="status-badge ${colorClass}" style="font-weight: bold;">${r.percent} <i class="fas ${arrowIcon}"></i></div>
+                <div class="price-val" style="font-size: 1.5rem; font-weight: 900; color: #000;">${r.current}</div>
+            </div>
+        </div>`;
+    return card;
+}
+
+async function load() {
+    try {
+        const res = await fetch('last_rates.json?v=' + Date.now());
+        const data = await res.json();
+        const container = document.getElementById('main-container');
+        container.innerHTML = '';
+        itemsList.forEach(item => {
+            const r = data.rates[item.key] || {current: "---", status: "up", percent: "0%"};
+            container.appendChild(createCardHTML(item, r));
+        });
+    } catch (e) { console.error("Error loading"); }
+}
+
+function setControlLayout(isGrid) {
+    document.getElementById('main-container').classList.toggle('grid-mode', isGrid);
+    localStorage.setItem('isGridMode', isGrid);
+}
+
+function setControlTheme(isLight) {
+    document.body.classList.toggle('light-mode', isLight);
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+    if (localStorage.getItem('isGridMode') === 'true') document.getElementById('main-container').classList.add('grid-mode');
+    updateDT();
+    load();
+});
+ </script>  
+</body>
+</html>
