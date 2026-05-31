@@ -371,26 +371,29 @@
     };
 
 function updateDT() {
-        const now = new Date();
-        now.setHours(now.getHours() + 1);
-        
-        let hours = now.getHours();
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        const hh = String(hours).padStart(2, '0');
-        
-        const j = jalaali.toJalaali(now);
-        const weekdays = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
-        const weekdayName = weekdays[now.getDay()];
-        const dtEl = document.getElementById('dt');
-        if(dtEl) {
-            dtEl.innerHTML = `<b>${hh}:${minutes}:${seconds} ${ampm}</b> <span>${weekdayName} ${j.jy}/${j.jm}/${j.jd}</span>`;
-        }
-            }
+    const now = new Date();
+    
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const hh = String(hours).padStart(2, '0');
+    
+    // تبدیل به تاریخ شمسی
+    const j = jalaali.toJalaali(now);
+    
+    // روزهای هفته به فارسی
+    const weekdays = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
+    const weekdayName = weekdays[now.getDay()];
+    
+    const dtEl = document.getElementById('dt');
+    if(dtEl) {
+        dtEl.innerHTML = `<b>${hh}:${minutes}:${seconds} ${ampm}</b> <span>${weekdayName} ${j.jy}/${j.jm}/${j.jd}</span>`;
+    }
+             }
     
     function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
 
