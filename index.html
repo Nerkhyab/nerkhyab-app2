@@ -95,12 +95,12 @@
             
         background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
            box-shadow:0 8px 25px rgba(0,0,0,0.30);
-            border-radius:20px; padding:0; display:flex; flex-direction:column;
+            border-radius:24px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
             -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
         }
 
-        .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; width: 100%; box-sizing: border-box; }
+        .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 18px; width: 100%; box-sizing: border-box; }
 
         .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
         .card.active-up .price-val { color: var(--green); }
@@ -113,7 +113,7 @@
         .text-up { color: var(--green) !important; }
         .text-down { color: var(--red) !important; }
 
-        .price-val { font-size:1.7rem; font-weight:700; transition: color 0.3s; }
+        .price-val { font-size:1.5rem; font-weight:600; transition: color 0.3s; }
         .card-info { display:flex; align-items:center; gap:10px; }
         .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
