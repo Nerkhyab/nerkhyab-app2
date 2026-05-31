@@ -100,8 +100,11 @@
             -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
         }
 
-        .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 22px; width: 100%; box-sizing: border-box; }
-
+      .grid-mode .card-main-row { flex-direction: column; text-align: center; padding: 16px 8px; gap: 8px; min-height: 130px; }
+.grid-mode .card-info { flex-direction: row-reverse; justify-content: center; gap: 8px; }
+.grid-mode .card-info img, .grid-mode .card-info div { width: 40px !important; height: 40px !important; }
+.grid-mode .price-val { font-size: 1.5rem; }
+.grid-mode .status-badge { justify-content: center; }  
         .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
         .card.active-up .price-val { color: var(--green); }
         .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
