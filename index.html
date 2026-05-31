@@ -361,70 +361,72 @@ body.light-mode .card .text-down { color: var(--red) !important; }
         </div>
                     </div><script>let currentLang = localStorage.getItem('lang') || 'fa';
 
-const itemsList = [
-    {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-    {id: "eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-    {id: "toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-    {id: "toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-    {id: "kaldar", key:"کلدار هرات", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
-    {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
-];
+  <script>
+    // تنظیمات اولیه برای پر کردن داده‌ها
+    const itemsList = [
+        {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+        {id: "eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+        {id: "toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+        {id: "toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+        {id: "kaldar", key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
+        {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
+    ];
 
+    function updateDT() {
+        const now = new Date();
+        now.setTime(now.getTime() + (60 * 60 * 1000)); // یک ساعت جلوتر
+        let h = now.getHours();
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        const j = jalaali.toJalaali(now);
+        const dtEl = document.getElementById('dt');
+        if(dtEl) dtEl.innerHTML = `<b>${h}:${m} ${ampm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+    }
 
+    function createCardHTML(item, r) {
+        const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
+        const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
+        
+        const card = document.createElement('div');
+        card.className = `card`; 
+        card.innerHTML = `
+            <div style="padding: 15px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <img src="${item.icon}" style="width:35px; height:35px; border-radius:8px;">
+                    <div style="font-weight: 800; color: #000;">${item.key}</div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <div class="status-badge ${colorClass}" style="font-weight: bold;">${r.percent} <i class="fas ${arrowIcon}"></i></div>
+                    <div class="price-val" style="font-size: 1.5rem; font-weight: 900; color: #000;">${r.current}</div>
+                </div>
+            </div>`;
+        return card;
+    }
 
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    async function load() {
+        try {
+            // آدرس فایل JSON خود را بررسی کنید (اگر در هاست محلی است)
+            const res = await fetch('last_rates.json?v=' + Date.now());
+            const data = await res.json();
+            const container = document.getElementById('main-container');
+            container.innerHTML = '';
+            itemsList.forEach(item => {
+                const r = data.rates[item.key] || {current: "---", status: "up", percent: "0%"};
+                container.appendChild(createCardHTML(item, r));
+            });
+        } catch (e) { console.error("Error loading rates"); }
+    }
 
-function createCardHTML(item, r) {
-    const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
-    const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
-    let iconHtml = `<img src="${item.icon}" style="width:35px; height:35px; border-radius:8px; object-fit:cover;">`;
-    
-    const card = document.createElement('div');
-    card.className = `card`; 
-    card.innerHTML = `
-        <div style="padding: 15px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                ${iconHtml}
-                <div style="font-weight: 800; color: #000;">${item.key}</div>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <div class="status-badge ${colorClass}" style="font-weight: bold;">${r.percent} <i class="fas ${arrowIcon}"></i></div>
-                <div class="price-val" style="font-size: 1.5rem; font-weight: 900; color: #000;">${r.current}</div>
-            </div>
-        </div>`;
-    return card;
-}
-
-async function load() {
-    try {
-        const res = await fetch('last_rates.json?v=' + Date.now());
-        const data = await res.json();
-        const container = document.getElementById('main-container');
-        container.innerHTML = '';
-        itemsList.forEach(item => {
-            const r = data.rates[item.key] || {current: "---", status: "up", percent: "0%"};
-            container.appendChild(createCardHTML(item, r));
-        });
-    } catch (e) { console.error("Error loading"); }
-}
-
-function setControlLayout(isGrid) {
-    document.getElementById('main-container').classList.toggle('grid-mode', isGrid);
-    localStorage.setItem('isGridMode', isGrid);
-}
-
-function setControlTheme(isLight) {
-    document.body.classList.toggle('light-mode', isLight);
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
-    if (localStorage.getItem('isGridMode') === 'true') document.getElementById('main-container').classList.add('grid-mode');
-    updateDT();
-    load();
-});
- </script>  
+    // راه اندازی اولیه
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+        if (localStorage.getItem('isGridMode') === 'true') document.getElementById('main-container').classList.add('grid-mode');
+        
+        updateDT();
+        setInterval(updateDT, 60000); // آپدیت زمان هر دقیقه
+        load(); // <--- این خط حیاتی بود که در کد شما نبود
+    });
+</script>
 </body>
 </html>
