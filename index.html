@@ -26,15 +26,14 @@
             font-weight: 300 !important;
             letter-spacing: 0.5px;
             opacity: 0.8;
+        
+body.light-mode {
+    --bg: #efebe5;
+    --card: #ffffff !important;  /* اضافه کردن !important برای اطمینان */
+    --text: #000;
+    --border: rgba(0,0,0,0.1);
+    --nav: rgba(255,255,255,0.9);
         }
-        body.light-mode {
-            --bg:#f5f0e6
-            --card:#ffffff;
-            --text:#000;
-            --border:rgba(0,0,0,0.1);
-            --nav:rgba(255,255,255,0.9);
-        }
-
         body {
             background: var(--bg);
 ); color:var(--text);
@@ -92,8 +91,9 @@
             gap: 9px; 
                         }
         .card {
-            
-        background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
+        
+    background: var(--card) !important;
+        border:1px solid var(--border);
            box-shadow:0 8px 25px rgba(0,0,0,0.30);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
