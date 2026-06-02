@@ -690,6 +690,10 @@ if (document.readyState === 'loading') {
             layoutSlider.style.transform = isGrid ? (document.dir === 'rtl' ? 'translateX(-100%)' : 'translateX(100%)') : 'translateX(0)';
         }
 
+        function openAbout() {
+    closeModal('sMod');
+    openModal('aboutMod');
+}
         const themeSlider = document.getElementById('theme-slider');
         if(themeSlider) {
             document.getElementById('opt-light').classList.toggle('active', isLight);
