@@ -268,6 +268,18 @@ body.light-mode .full-modal * {
         <div class="date-time" id="dt"></div>
     </div>
 
+        <!-- نوار یادآوری نصب برنامه -->
+<div id="installGuideBar" style="background: linear-gradient(135deg, #1e6b5e, #134b42); margin: 0 10px 12px 10px; padding: 12px 16px; border-radius: 16px; display: none; align-items: center; justify-content: space-between; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); direction: rtl;">
+    <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+        <i class="fas fa-mobile-alt" style="font-size: 1.3rem; color: #ffd966;"></i>
+        <div style="font-size: 0.7rem; color: #fff; line-height: 1.4;">
+            <strong>📱 نصب برنامه در صفحه اصلی گوشی</strong><br>
+            با کلیک روی <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.65rem;">⋮ سه نقطه</span> بالای مرورگر → <strong>افزودن به صفحه اصلی</strong>
+        </div>
+    </div>
+    <button id="confirmInstallBtn" style="background: #ffd966; border: none; border-radius: 20px; padding: 6px 14px; font-size: 0.7rem; font-weight: bold; color: #1a3a33; cursor: pointer;">✓ نصب کردم</button>
+    <i id="closeGuideBtn" class="fas fa-times" style="color: #ccc; cursor: pointer; padding: 6px; font-size: 0.9rem;"></i>
+</div>
             <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
@@ -414,6 +426,64 @@ navigator.clipboard.writeText(window.location.href);
                   }
     }
 
+                        // مدیریت نوار یادآوری نصب برنامه
+function initInstallGuide() {
+    const guideBar = document.getElementById('installGuideBar');
+    const confirmBtn = document.getElementById('confirmInstallBtn');
+    const closeBtn = document.getElementById('closeGuideBtn');
+    
+    if (!guideBar) return;
+    
+    // آخرین باری که نوار نمایش داده شده رو چک کن
+    const lastShownDate = localStorage.getItem('guideLastShownDate');
+    const today = new Date().toDateString();
+    const isInstalledConfirmed = localStorage.getItem('appInstalledConfirmed') === 'true';
+    
+    // اگه کاربر قبلاً تأیید کرده که نصب کرده، دیگه نشون نده
+    if (isInstalledConfirmed) {
+        guideBar.style.display = 'none';
+        return;
+    }
+    
+    // هر روز فقط یک بار نشون بده
+    if (lastShownDate !== today) {
+        guideBar.style.display = 'flex';
+        localStorage.setItem('guideLastShownDate', today);
+    } else {
+        // اگه امروز قبلاً نشون داده شده، مخفی نگه دار
+        if (localStorage.getItem('guideHiddenToday') === 'true') {
+            guideBar.style.display = 'none';
+        } else {
+            guideBar.style.display = 'flex';
+        }
+    }
+    
+    // دکمه "نصب کردم" - برای همیشه نوار رو غیرفعال کن
+    if (confirmBtn) {
+        confirmBtn.onclick = function() {
+            guideBar.style.display = 'none';
+            localStorage.setItem('appInstalledConfirmed', 'true');
+            localStorage.removeItem('guideHiddenToday');
+            // یه پیام تبریک کوچولو نشون بده
+            alert('🎉 ممنون! حالا می‌تونی از طریق آیکون برنامه توی صفحه اصلی گوشیت وارد بشی.');
+        };
+    }
+    
+    // دکمه بستن معمولی - فقط امروز نوار رو مخفی کن (فردا دوباره میاد)
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            guideBar.style.display = 'none';
+            localStorage.setItem('guideHiddenToday', 'true');
+        };
+    }
+}
+
+// مقداردهی اولیه وقتی صفحه لود شد
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initInstallGuide);
+} else {
+    initInstallGuide();
+                        }
     async function load() {
         try {
             const res = await fetch('last_rates.json?v=' + Date.now());
@@ -602,6 +672,10 @@ navigator.clipboard.writeText(window.location.href);
 
     if (localStorage.getItem('theme') === 'light') {
         document.body.classList.add('light-mode');
+        window.addEventListener('DOMContentLoaded', () => {
+    // ... کدهای قبلی ...
+    initInstallGuide();  // اضافه کن
+});
     }
 
     if (localStorage.getItem('isGridMode') === 'true') {
