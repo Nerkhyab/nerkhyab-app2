@@ -38,6 +38,9 @@ body.light-mode {
     color: var(--text);
 }
 
+        /* مخفی کردن نوار قدیمی */
+#installGuideBar { display: none !important; }
+        
 .bottom-nav i, .bottom-nav span {
     color: var(--text);
 }
@@ -514,6 +517,7 @@ function initInstallGuide() {
 // مقداردهی اولیه وقتی صفحه لود شد
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initInstallGuide);
+    initNewInstallGuide();
 } else {
     initInstallGuide();
                         }
@@ -776,8 +780,7 @@ if (document.readyState === 'loading') {
 } else {
     initNewInstallGuide();
         }
-                        /* مخفی کردن نوار قدیمی */
-#installGuideBar { display: none !important; }
+                    
     
 </script>
 </body>
