@@ -280,6 +280,14 @@ body.light-mode .full-modal * {
     <button id="confirmInstallBtn" style="background: #ffd966; border: none; border-radius: 20px; padding: 6px 14px; font-size: 0.7rem; font-weight: bold; color: #1a3a33; cursor: pointer;">✓ نصب کردم</button>
     <i id="closeGuideBtn" class="fas fa-times" style="color: #ccc; cursor: pointer; padding: 6px; font-size: 0.9rem;"></i>
 </div>
+        <!-- نوار راهنمای نصب برنامه -->
+<div id="newInstallGuideBar" style="background: linear-gradient(135deg, #2a7f6e, #1a5f52); margin: 0 10px 12px 10px; padding: 12px 16px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); direction: rtl; cursor: pointer;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-info-circle" style="font-size: 1.3rem; color: #ffd966;"></i>
+        <span style="font-size: 0.85rem; font-weight: bold; color: #fff;">📱 راهنمای نصب برنامه</span>
+    </div>
+    <i class="fas fa-chevron-left" style="color: #ffd966; font-size: 0.8rem;"></i>
+</div>
             <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
@@ -287,7 +295,32 @@ body.light-mode .full-modal * {
         <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
         <i class="fas fa-calculator" style="cursor:pointer;" onclick="openModal('calcMod')"></i>
     </div>
-
+<!-- مودال راهنمای نصب -->
+<div id="newInstallModal" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.98); backdrop-filter: blur(25px); direction: rtl;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="font-size: 1.2rem; color: #ffd966;">📱 راهنمای نصب برنامه</b>
+            <i class="fas fa-times" style="font-size: 1.3rem; cursor: pointer; opacity: 0.6;" onclick="closeModal('newInstallModal')"></i>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; text-align: center;">
+            <i class="fas fa-arrow-down" style="font-size: 2rem; color: #ffd966; margin-bottom: 10px; display: block;"></i>
+            <p style="font-size: 0.95rem; line-height: 1.8; text-align: justify; margin-bottom: 20px;">
+                جهت استفاده و تجربه بهتر از برنامه، با استفاده از <strong style="color: #ffd966;">سه نقطه ⋮ بالای مرورگرتان</strong>، 
+                گزینه <strong style="color: #ffd966;">«افزودن به صفحه اصلی»</strong> را انتخاب کنید.
+            </p>
+            <p style="font-size: 0.85rem; line-height: 1.8; text-align: justify; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px;">
+                ✅ با افزودن برنامه به صفحه گوشیتان، دیگر نیازی نیست هر بار وارد سایت شوید<br>
+                ✅ فقط با کلیک بر روی علامت برنامه در صفحه اصلی گوشیتان، مستقیماً وارد برنامه خواهید شد
+            </p>
+        </div>
+        
+        <button id="newInstallConfirmBtn" style="background: #ffd966; border: none; border-radius: 30px; padding: 12px; font-size: 1rem; font-weight: bold; color: #1a3a33; cursor: pointer; font-family: Vazirmatn; margin-top: 10px;">
+            ✓ نصب کردم، دیگر نمایش نده
+        </button>
+    </div>
+</div>
+        
     <div id="sMod" class="full-modal" style="padding: 20px; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
             <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
@@ -708,7 +741,41 @@ if (document.readyState === 'loading') {
 
     syncUIWithStorage();
     }
+// نوار و مودال راهنمای نصب (جدید)
+function initNewInstallGuide() {
+    const guideBar = document.getElementById('newInstallGuideBar');
+    const installModal = document.getElementById('newInstallModal');
+    const confirmBtn = document.getElementById('newInstallConfirmBtn');
+    
+    const isInstalled = localStorage.getItem('appInstalledConfirmedNew') === 'true';
+    
+    if (isInstalled && guideBar) {
+        guideBar.style.display = 'none';
+        return;
+    }
+    
+    if (guideBar) {
+        guideBar.onclick = function() {
+            if (installModal) installModal.classList.add('active');
+        };
+    }
+    
+    if (confirmBtn) {
+        confirmBtn.onclick = function() {
+            localStorage.setItem('appInstalledConfirmedNew', 'true');
+            if (installModal) installModal.classList.remove('active');
+            if (guideBar) guideBar.style.display = 'none';
+            alert('🎉 ممنون! برنامه با موفقیت نصب شد.');
+        };
+    }
+}
 
+// اجرا کن بدون اینکه کدهای قبلی رو خراب کنه
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNewInstallGuide);
+} else {
+    initNewInstallGuide();
+        }
     
 </script>
 </body>
